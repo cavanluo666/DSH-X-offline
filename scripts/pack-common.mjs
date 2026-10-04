@@ -59,18 +59,35 @@ export function run(command, args, cwd = ROOT) {
 }
 
 /**
- * 系统自带的 bsdtar（Windows 10+ 的 C:\Windows\System32\tar.exe）。
+ * 解 CAB 的可靠工具：优先 7z（完整、稳定），其次系统 bsdtar。
  *
- * 为什么必须显式指到 System32：Git for Windows 的 GNU tar（usr\bin\tar.exe）会在
- * PATH 里抢先，而 GNU tar **不支持 CAB 格式**，解 WebView2 的 .cab 会静默失败
- * （run 不报错、目录却是空的）。bsdtar 认 cab，一条命令完整解出 168 个文件。
+ * 为什么绕开 expand 与裸 tar：
+ *   - expand <cab> -F:* 实测只解出开头 2 个文件，557MB 的 CAB 解不全；
+ *   - PATH 里的 tar 可能是 Git for Windows 的 GNU tar（不支持 cab）；
+ *   - 显式 System32\tar.exe（bsdtar）在 CI 的 Windows runner 上偶发静默失败
+ *     （status 0、无输出、目录空），难以定位。
+ * 7z 在这三处都验证过：一条命令完整解出 168 个文件。
  */
-export function sysTar() {
-  if (process.platform === 'win32') {
-    const sysroot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows'
-    return join(sysroot, 'System32', 'tar.exe')
+function findCaber() {
+  if (process.platform !== 'win32') return null
+  const candidates = [
+    join('C:', 'ProgramData', 'chocolatey', 'bin', '7z.exe'),
+    join('C:', 'Program Files', '7-Zip', '7z.exe'),
+    join('C:', 'Program Files (x86)', '7-Zip', '7z.exe'),
+  ]
+  for (const p of candidates) if (existsSync(p)) return p
+  return null
+}
+
+function extractCab(cab, dest) {
+  const seven = findCaber()
+  if (seven) {
+    run(seven, ['x', cab, `-o${dest}`, '-y'])
+    return
   }
-  return 'tar'
+  // 兜底：系统 bsdtar（Windows 10+ 自带，支持 cab）
+  const sysroot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows'
+  run(join(sysroot, 'System32', 'tar.exe'), ['-xf', cab, '-C', dest])
 }
 
 export async function download(url, dest) {
@@ -336,9 +353,8 @@ export async function copyWebView2Runtime(out, log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // 用系统 bsdtar 解 CAB。为什么不用 expand（只解 2 个文件）、为什么不用裸 tar
-      //（Git 的 GNU tar 不支持 cab）：见 sysTar() 的注释。
-      run(sysTar(), ['-xf', cab, '-C', stamp])
+      // 用 7z（优先）或系统 bsdtar 解 CAB，见 extractCab() 的注释
+      extractCab(cab, stamp)
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
@@ -405,8 +421,8 @@ export async function unpackWebView2Runtime(log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // 用系统 bsdtar 解 CAB（见 sysTar()：expand 解不全、Git GNU tar 不支持 cab）
-      run(sysTar(), ['-xf', cab, '-C', stamp])
+      // 用 7z（优先）或系统 bsdtar 解 CAB，见 extractCab() 的注释
+      extractCab(cab, stamp)
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }

@@ -42,6 +42,9 @@ jobs:
       - name: 确保有 NSIS（makensis 由 pack.mjs 调用）
         run: choco install nsis -y --no-progress
 
+      - name: 装 7zip（解 WebView2 CAB，expand 解不全、GNU tar 不支持 cab）
+        run: choco install 7zip -y --no-progress
+
       - name: 装 dsh 本体（离线载荷需要本机已装 @deepseek-ai/dsh）
         run: npm i -g @deepseek-ai/dsh
 
