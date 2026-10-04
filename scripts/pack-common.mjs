@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { createWriteStream, existsSync, readFileSync } from 'node:fs'
+import { createWriteStream, existsSync, readFileSync, readdirSync } from 'node:fs'
 import { copyFile, cp, mkdir, readdir, rm, writeFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import { pipeline } from 'node:stream/promises'
@@ -83,13 +83,6 @@ function extractCab(cab, dest) {
   const seven = findCaber()
   if (seven) {
     run(seven, ['x', cab, `-o${dest}`, '-y'])
-    // 诊断：解压后 dest 到底有什么（定位 7z -o 是否真的把文件写进 dest）
-    try {
-      const top = readdirSync(dest, { withFileTypes: true }).map((e) => e.name).slice(0, 8)
-      console.log(`  诊断 extractCab：${dest} 顶层 = ${top.join(', ') || '(空)'}`)
-    } catch (e) {
-      console.log(`  诊断 extractCab：读取 ${dest} 失败：${e.message}`)
-    }
     return
   }
   // 兜底：系统 bsdtar（Windows 10+ 自带，支持 cab）
@@ -392,11 +385,7 @@ export async function copyWebView2Runtime(out, log = console.log) {
     // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
     // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
     // 不同解包工具对 CAB 目录结构的还原并不一致。
-    try {
-      log(`  诊断：stamp 顶层 = ${readdirSync(stamp).slice(0, 10).join(', ') || '(空)'}`)
-    } catch { /* 诊断不影响主流程 */ }
     const root = findWebView2Root(stamp)
-    log(`  诊断：findWebView2Root = ${root ? root.replace(stamp, 'stamp') : '(空)'}`)
     if (root && root !== stamp) {
       for (const entry of await readdir(root)) {
         await cp(join(root, entry), join(stamp, entry), { recursive: true })
@@ -466,11 +455,7 @@ export async function unpackWebView2Runtime(log = console.log) {
     // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
     // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
     // 不同解包工具对 CAB 目录结构的还原并不一致。
-    try {
-      log(`  诊断：stamp 顶层 = ${readdirSync(stamp).slice(0, 10).join(', ') || '(空)'}`)
-    } catch { /* 诊断不影响主流程 */ }
     const root = findWebView2Root(stamp)
-    log(`  诊断：findWebView2Root = ${root ? root.replace(stamp, 'stamp') : '(空)'}`)
     if (root && root !== stamp) {
       for (const entry of await readdir(root)) {
         await cp(join(root, entry), join(stamp, entry), { recursive: true })
