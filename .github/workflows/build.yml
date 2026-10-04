@@ -45,6 +45,19 @@ jobs:
       - name: 装 dsh 本体（离线载荷需要本机已装 @deepseek-ai/dsh）
         run: npm i -g @deepseek-ai/dsh
 
+      - name: 定位 dsh 本体（写入 DSH_CORE_SOURCE）
+        shell: bash
+        run: |
+          root="$(npm root -g)"
+          echo "npm 全局根目录：$root"
+          core="$root/@deepseek-ai/dsh"
+          if [ -f "$core/lib/bin.js" ]; then
+            echo "DSH_CORE_SOURCE=$core" >> "$GITHUB_ENV"
+            echo "已设置 DSH_CORE_SOURCE=$core"
+          else
+            echo "::warning::在 $core 没找到 dsh 本体"
+          fi
+
       - name: 打包（Rust + NSIS）
         run: npm run dist
 
@@ -112,6 +125,20 @@ jobs:
       - name: 装 dsh 本体（离线载荷需要本机已装 @deepseek-ai/dsh）
         if: steps.probe.outputs.ready == 'yes'
         run: npm i -g @deepseek-ai/dsh
+
+      - name: 定位 dsh 本体（写入 DSH_CORE_SOURCE）
+        if: steps.probe.outputs.ready == 'yes'
+        shell: bash
+        run: |
+          root="$(npm root -g)"
+          echo "npm 全局根目录：$root"
+          core="$root/@deepseek-ai/dsh"
+          if [ -f "$core/lib/bin.js" ]; then
+            echo "DSH_CORE_SOURCE=$core" >> "$GITHUB_ENV"
+            echo "已设置 DSH_CORE_SOURCE=$core"
+          else
+            echo "::warning::在 $core 没找到 dsh 本体"
+          fi
 
       - name: 打包（.app + .dmg，ad-hoc 签名）
         if: steps.probe.outputs.ready == 'yes'
