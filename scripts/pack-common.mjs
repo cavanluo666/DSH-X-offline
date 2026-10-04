@@ -321,7 +321,8 @@ export async function copyWebView2Runtime(out, log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      run('expand', ['-F:*', cab, stamp])
+      // expand 语法：`expand <cab> -F:* <dest>`，-F:Files 必须跟在 CAB 之后（见 unpackWebView2Runtime）
+      run('expand', [cab, '-F:*', stamp])
     } else {
       // .zip 也认：方便自己预先解好一份
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
@@ -389,7 +390,11 @@ export async function unpackWebView2Runtime(log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      run('expand', ['-F:*', cab, stamp])
+      // expand 的语法是 `expand <cab> -F:* <dest>`：-F:Files 必须跟在 CAB 之后。
+      // 之前写成 `expand -F:* <cab> <dest>`，被 expand 当成「显示清单」模式，
+      // 只打印 "Adding ... to Extraction Queue" 并不真正解压，结果找不到
+      // msedgewebview2.exe。
+      run('expand', [cab, '-F:*', stamp])
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
