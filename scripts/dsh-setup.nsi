@@ -1,4 +1,4 @@
-﻿; dsh-setup.nsi — DSH-X 的 NSIS 安装程序。
+; dsh-setup.nsi — DSH-X 的 NSIS 安装程序。
 ;
 ; 为什么从 Inno Setup 换成 NSIS：这一版要把内置的 WebView2 固定版本运行时（约 240 MB
 ; 的 CAB，解开 400+ MB）随包发出去。NSIS 对「一大坨文件 + 少数几个精确控制的步骤」
@@ -176,12 +176,16 @@ Section "DSH-X" SecMain
   ;;    这样做的好处在离线场景：Win10 旧镜像、LTSC、被精简过的系统上未必预装
   ;;    Evergreen，缺了它内嵌窗口建不出来、界面只能退回系统浏览器。
   !if "${WEBVIEW2_DIR}" != ""
+    !echo "WEBVIEW2_DIR = ${WEBVIEW2_DIR}"
+    !echo "WEBVIEW2 exe 路径 = ${WEBVIEW2_DIR}\msedgewebview2.exe"
     !if /FILEEXISTS "${WEBVIEW2_DIR}\msedgewebview2.exe"
+      !echo "FILEEXISTS 判定：是（走 File /r 目录分支）"
       ;; 已经是解开的目录：直接拷（开发/调试时更省事）
       DetailPrint "正在布置 WebView2 运行时…"
       SetOutPath "$INSTDIR\webview2"
       File /r "${WEBVIEW2_DIR}\*.*"
     !else
+      !echo "FILEEXISTS 判定：否（走 expand CAB 分支）"
       ;; 直接给了 .cab：先落到临时目录再展开。
       ;;
       ;; 注意 CAB 里套了一层 Microsoft.WebView2.FixedVersionRuntime.<版本>.<arch>\ ——
