@@ -5,7 +5,7 @@
 
 [简体中文](README.md) | **English**
 
-  <img alt="license" src="https://img.shields.io/badge/license-MIT-263146?style=flat-square">
+  <img alt="license" src="https://img.shields.io/badge/license-GPLv3-263146?style=flat-square">
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-zero-4b6fff?style=flat-square">
   <img alt="build step" src="https://img.shields.io/badge/build%20step-none-7da1de?style=flat-square">
   <img alt="dsh kernels" src="https://img.shields.io/badge/dsh-0.1.5--0.1.7--rc.2-2f6f4f?style=flat-square">
@@ -469,7 +469,7 @@ On privacy and trust, plainly:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+GPL-3.0-or-later — see [LICENSE](LICENSE) (the upstream MIT notice is kept in [LICENSE-MIT](LICENSE-MIT)).
 
 This project is an independent plugin and is not affiliated with, endorsed by, or
 sponsored by any model provider. Using it to reach free tiers is subject to those

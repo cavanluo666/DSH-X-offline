@@ -5,7 +5,7 @@
 
 **简体中文** | [English](README_EN.md)
 
-  <img alt="许可证" src="https://img.shields.io/badge/license-MIT-263146?style=flat-square">
+  <img alt="许可证" src="https://img.shields.io/badge/license-GPLv3-263146?style=flat-square">
   <img alt="零依赖" src="https://img.shields.io/badge/dependencies-zero-4b6fff?style=flat-square">
   <img alt="无构建步骤" src="https://img.shields.io/badge/build%20step-none-7da1de?style=flat-square">
   <img alt="适配内核" src="https://img.shields.io/badge/dsh-0.1.5--0.1.7--rc.2-2f6f4f?style=flat-square">
@@ -420,7 +420,7 @@ npm run typecheck                 # tsc --noEmit，严格检查 adapter/ 接缝�
 
 ## 许可证
 
-MIT，见 [LICENSE](LICENSE)。
+GPL-3.0-or-later，见 [LICENSE](LICENSE)（上游 MIT 声明保留在 [LICENSE-MIT](LICENSE-MIT)）。
 
 本项目是独立插件，与任何模型提供方无隶属、认可或赞助关系。用它访问免费额度受各提供方
 自身条款约束；在超出你自己机器的场景部署前，请先确认这些条款。

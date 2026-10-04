@@ -44,10 +44,11 @@
     "README.md",
     "README.en.md",
     "LICENSE",
+    "LICENSE-MIT",
     "assets",
     "locale/*.json"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/masknull/dsh-workbuddy-connect.git"

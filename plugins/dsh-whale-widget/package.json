@@ -16,7 +16,8 @@
     "assets",
     "cordis.patch.yml",
     "README.md",
-    "PROVENANCE.md"
+    "PROVENANCE.md",
+    "LICENSE-MIT"
   ],
   "repository": {
     "type": "git",
@@ -31,5 +32,5 @@
       "patch": "./cordis.patch.yml"
     }
   },
-  "license": "MIT"
+  "license": "GPL-3.0-or-later"
 }

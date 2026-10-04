@@ -466,6 +466,6 @@ curl http://127.0.0.1:3080/dsh-whale/audio.json
 
 ## 许可证
 
-本项目**代码**基于 **MIT License** 开源，详见 [LICENSE](LICENSE)。
+本项目**代码**按 **GPL-3.0-or-later** 发布，详见 [LICENSE](LICENSE)（上游 MIT 声明保留在 [LICENSE-MIT](LICENSE-MIT)）。
 
 ⚠️ **`assets/` 下的美术素材（图片 / 动图 / 音效）不在 MIT 覆盖范围内**：它们由维护者提供或使用 AI 工具生成，按「原样（as-is）」随插件分发、仅供运行本插件使用，不授予再许可、也不声明为原创作品。逐项来源、元数据清理说明与权利主张（takedown）方式见 **[PROVENANCE.md](PROVENANCE.md)**。

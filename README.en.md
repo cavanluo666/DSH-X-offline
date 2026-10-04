@@ -127,10 +127,13 @@ Copyright (C) 2026 yyh          (original project)
 
 Released under the **GNU General Public License v3.0 or later**; see [`LICENSE`](LICENSE)
 for the full terms. The upstream project was released under MIT, and its notice is preserved
-in full in [`NOTICE.md`](NOTICE.md) and [`LICENSE`](LICENSE).
+in full in [`LICENSE-MIT`](LICENSE-MIT) and [`NOTICE.md`](NOTICE.md).
 
-The `plugins/` directory bundles third-party plugins that keep their own licenses (all MIT);
-see [`NOTICE.md`](NOTICE.md) for details.
+The five bundled plugins under `plugins/` are also released under **GPL-3.0-or-later**.
+Three of them (`dsh-our-free-model`, `dsh-whale-widget`, `dsh-workbuddy-connect`) originate
+from third-party MIT projects; their upstream notices are kept in each directory's
+`LICENSE-MIT`. **Note**: the art assets under `dsh-whale-widget/assets/` are not covered by
+any license — see [`NOTICE.md`](NOTICE.md).
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

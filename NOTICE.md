@@ -54,20 +54,34 @@ Copyright (C) 2026 yyh          （原始项目）
   `shared` / `isolated` 两种家目录隔离模式下的路径推导。
 - 修复测试目录错位问题（原先 `test/test/` 的重复副本导致整套用例失败）。
 
-## 内置的第三方组件
+## 内置的插件
 
-本仓库的 `plugins/` 目录内包含若干插件，各自保留其原始许可证：
+本仓库的 `plugins/` 目录内含 5 个插件。它们**全部**以 **GPL-3.0-or-later** 发布
+（与本作品主体一致），其中前 3 个源自他人的 MIT 项目、经本版本修改后改为 GPLv3：
+上游的 MIT 声明按其许可要求**完整保留**在各插件目录的 `LICENSE-MIT` 中。
 
-| 插件 | 版权人 / 许可证 |
-| --- | --- |
-| `dsh-our-free-model` | Copyright (c) 2026 zouyuxuan122 · MIT |
-| `dsh-whale-widget` | Copyright (c) 2026 MeteorNOX · MIT |
-| `dsh-workbuddy-connect` | Copyright (c) 2026 Corrine Hu · MIT |
-| `dsh-omniroute-connect` | Copyright (c) 2026 LCH · GPL-3.0-or-later |
-| `dsh-small-model-delegate` | Copyright (c) 2026 LCH · GPL-3.0-or-later |
+| 插件 | 版权人 | 许可 |
+| --- | --- | --- |
+| `dsh-our-free-model` | 上游 (c) 2026 zouyuxuan122 · 修改 (c) 2026 LCH | GPL-3.0-or-later（上游 MIT 见 `LICENSE-MIT`） |
+| `dsh-whale-widget` | 上游 (c) 2026 MeteorNOX · 修改 (c) 2026 LCH | GPL-3.0-or-later（上游 MIT 见 `LICENSE-MIT`） |
+| `dsh-workbuddy-connect` | 上游 (c) 2026 Corrine Hu · 修改 (c) 2026 LCH | GPL-3.0-or-later（上游 MIT 见 `LICENSE-MIT`） |
+| `dsh-omniroute-connect` | (c) 2026 LCH | GPL-3.0-or-later |
+| `dsh-small-model-delegate` | (c) 2026 LCH | GPL-3.0-or-later |
 
-上面三个 MIT 组件与 GPLv3 兼容，可随本作品一同分发；它们的版权声明不得移除。
-后两个是同一作者（LCH）的作品，与本作品许可一致。
+> **改许可的依据**：MIT 允许再许可（sublicense），因此可以把 MIT 代码并入
+> GPLv3 作品；条件是保留原版权声明与许可全文——这正是各目录 `LICENSE-MIT` 的作用。
+
+### ⚠️ `dsh-whale-widget` 的美术素材不在上述任何许可内
+
+该插件 `assets/` 下的图片 / 动图 / 音效，原作者在 `PROVENANCE.md` 中明确声明
+**不授予再许可、也不声明为原创作品**（来源已不可考，部分为 AI 生成）。
+因此这些素材：
+
+- **不受**本作品 GPLv3 覆盖，**也不受**上游 MIT 覆盖；
+- 按「原样（as-is）」随插件分发，仅供运行本插件使用。
+
+如果你要再分发或商用这个插件的素材，请自行确认权利状态。
+若你是素材权利人，可在仓库开 issue 要求移除，见 `PROVENANCE.md` 第四节。
 
 其他第三方组件：
 

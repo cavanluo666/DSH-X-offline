@@ -220,4 +220,4 @@ Every file is written atomically (temporary file + rename) — no `.lock`, no le
 
 ## License
 
-[MIT](./LICENSE)
+[GPL-3.0-or-later](./LICENSE) (upstream MIT kept in [LICENSE-MIT](./LICENSE-MIT))

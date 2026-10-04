@@ -25,6 +25,7 @@
     "icon.svg",
     "cordis.patch.yml",
     "LICENSE",
+    "LICENSE-MIT",
     "README.md",
     "README_EN.md"
   ],
@@ -49,7 +50,7 @@
       "inject": []
     }
   },
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "typescript": "^5.9.2"
   }

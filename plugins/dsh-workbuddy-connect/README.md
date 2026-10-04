@@ -234,4 +234,4 @@ $DSH_HOME/profiles/<profile>/.dsh-workbuddy-connect/
 
 ## 许可证
 
-[MIT](./LICENSE)
+[GPL-3.0-or-later](./LICENSE)（上游 MIT 见 [LICENSE-MIT](./LICENSE-MIT)）

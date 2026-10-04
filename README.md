@@ -169,9 +169,12 @@ Copyright (C) 2026 yyh          （原始项目）
 ```
 
 以 **GNU General Public License v3.0 or later** 发布，完整条款见 [`LICENSE`](LICENSE)。
-上游原始项目以 MIT 发布，其声明已完整保留在 [`NOTICE.md`](NOTICE.md) 与 [`LICENSE`](LICENSE) 中。
+上游原始项目以 MIT 发布，其声明已完整保留在 [`LICENSE-MIT`](LICENSE-MIT) 与 [`NOTICE.md`](NOTICE.md) 中。
 
-`plugins/` 目录下内含若干第三方插件，各自保留原许可证（均为 MIT），详见 [`NOTICE.md`](NOTICE.md)。
+`plugins/` 下的 5 个内置插件同样以 **GPL-3.0-or-later** 发布；其中
+`dsh-our-free-model`、`dsh-whale-widget`、`dsh-workbuddy-connect` 源自他人的 MIT 项目，
+上游声明保留在各目录的 `LICENSE-MIT` 中。**注意**：`dsh-whale-widget` 的
+`assets/` 美术素材不在任何许可覆盖范围内，详见 [`NOTICE.md`](NOTICE.md)。
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
