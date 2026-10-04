@@ -58,6 +58,21 @@ export function run(command, args, cwd = ROOT) {
   if (result.status !== 0) throw new Error(`${command} ${args.join(' ')} failed`)
 }
 
+/**
+ * 系统自带的 bsdtar（Windows 10+ 的 C:\Windows\System32\tar.exe）。
+ *
+ * 为什么必须显式指到 System32：Git for Windows 的 GNU tar（usr\bin\tar.exe）会在
+ * PATH 里抢先，而 GNU tar **不支持 CAB 格式**，解 WebView2 的 .cab 会静默失败
+ * （run 不报错、目录却是空的）。bsdtar 认 cab，一条命令完整解出 168 个文件。
+ */
+export function sysTar() {
+  if (process.platform === 'win32') {
+    const sysroot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows'
+    return join(sysroot, 'System32', 'tar.exe')
+  }
+  return 'tar'
+}
+
 export async function download(url, dest) {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`下载失败 HTTP ${res.status} ${url}`)
@@ -321,12 +336,9 @@ export async function copyWebView2Runtime(out, log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // 用 tar 解 CAB（Windows 自带 bsdtar，支持 cab 格式）。
-      //
-      // 为什么不用 expand：`expand <cab> -F:* <dest>` 实测只解出开头 2 个文件，
-      // 其余只打印 "Adding ... to Extraction Queue" 并不落盘 —— 557MB 的运行时
-      // 根本解不全，随后找不到 msedgewebview2.exe。tar 一条命令完整解出 168 个文件。
-      run('tar', ['-xf', cab, '-C', stamp])
+      // 用系统 bsdtar 解 CAB。为什么不用 expand（只解 2 个文件）、为什么不用裸 tar
+      //（Git 的 GNU tar 不支持 cab）：见 sysTar() 的注释。
+      run(sysTar(), ['-xf', cab, '-C', stamp])
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
@@ -393,10 +405,8 @@ export async function unpackWebView2Runtime(log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // 用 tar 解 CAB（Windows 自带 bsdtar，支持 cab 格式）。
-      // 不用 expand：`expand <cab> -F:* <dest>` 只解开头 2 个文件，557MB 解不全
-      //（实测其余文件只入 Extraction Queue 不落盘），见 copyWebView2Runtime 的注释。
-      run('tar', ['-xf', cab, '-C', stamp])
+      // 用系统 bsdtar 解 CAB（见 sysTar()：expand 解不全、Git GNU tar 不支持 cab）
+      run(sysTar(), ['-xf', cab, '-C', stamp])
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
