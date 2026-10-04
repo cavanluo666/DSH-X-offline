@@ -31,7 +31,7 @@ SOFTWARE.
 ```
 
 上述 MIT 声明按要求完整保留。上游的 MIT 条款允许再许可（sublicense），
-因此本衍生作品整体以 **GPL-3.0-or-later** 发布（见 [`LICENSE.gpl`](LICENSE.gpl)）。
+因此本衍生作品整体以 **GPL-3.0-or-later** 发布（见 [`LICENSE`](LICENSE)）。
 
 ## 本衍生作品的许可
 
@@ -41,7 +41,7 @@ Copyright (C) 2026 yyh          （原始项目）
 ```
 
 以 **GNU General Public License v3.0 or later** 发布，完整条款见
-[`LICENSE.gpl`](LICENSE.gpl)。SPDX 标识符：`GPL-3.0-or-later`。
+[`LICENSE`](LICENSE)。SPDX 标识符：`GPL-3.0-or-later`。
 
 ## 本版本的主要改动
 
@@ -56,17 +56,18 @@ Copyright (C) 2026 yyh          （原始项目）
 
 ## 内置的第三方组件
 
-本仓库的 `plugins/` 目录内包含若干**第三方插件**，各自保留其原始许可证：
+本仓库的 `plugins/` 目录内包含若干插件，各自保留其原始许可证：
 
 | 插件 | 版权人 / 许可证 |
 | --- | --- |
 | `dsh-our-free-model` | Copyright (c) 2026 zouyuxuan122 · MIT |
 | `dsh-whale-widget` | Copyright (c) 2026 MeteorNOX · MIT |
 | `dsh-workbuddy-connect` | Copyright (c) 2026 Corrine Hu · MIT |
-| `dsh-omniroute-connect` | MIT |
-| `dsh-small-model-delegate` | 见其目录内说明 |
+| `dsh-omniroute-connect` | Copyright (c) 2026 LCH · GPL-3.0-or-later |
+| `dsh-small-model-delegate` | Copyright (c) 2026 LCH · GPL-3.0-or-later |
 
-这些 MIT 组件与 GPLv3 兼容，可随本作品一同分发；它们的版权声明不得移除。
+上面三个 MIT 组件与 GPLv3 兼容，可随本作品一同分发；它们的版权声明不得移除。
+后两个是同一作者（LCH）的作品，与本作品许可一致。
 
 其他第三方组件：
 

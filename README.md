@@ -168,7 +168,7 @@ Copyright (C) 2026 LCH          （本版本的修改）
 Copyright (C) 2026 yyh          （原始项目）
 ```
 
-以 **GNU General Public License v3.0 or later** 发布，完整条款见 [`LICENSE.gpl`](LICENSE.gpl)。
+以 **GNU General Public License v3.0 or later** 发布，完整条款见 [`LICENSE`](LICENSE)。
 上游原始项目以 MIT 发布，其声明已完整保留在 [`NOTICE.md`](NOTICE.md) 与 [`LICENSE`](LICENSE) 中。
 
 `plugins/` 目录下内含若干第三方插件，各自保留原许可证（均为 MIT），详见 [`NOTICE.md`](NOTICE.md)。

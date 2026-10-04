@@ -14,8 +14,7 @@
  *   - `undefined` / `'openai'` → 标准 OpenAI 兼容；
  *   - `'opencode-free'` → 加上那组指纹头，并用池化凭据 `Bearer public`。
  *
- * 指纹那部分的事实来自本机 dsh-our-free-model 插件对线上网关的直接验证
- * （见其 `src/upstream.js`），沿用公开且已验证的部分，不猜。
+ * 指纹那部分的依据是 opencode.ai 网关的公开行为，沿用已验证的部分，不猜。
  *
  * ## 单一职责的边界
  *

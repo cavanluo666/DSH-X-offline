@@ -49,15 +49,13 @@ export const UPSTREAM_DEFAULTS = Object.freeze({
  * 免费层要求一组特定的客户端指纹。所以它带一个 `kind` 标记，
  * 让上游客户端知道该用哪套握手方式。
  *
- * 依据：本机的 dsh-our-free-model 插件在 2026-09-24 对线上网关直接验证过
- * 这些事实（见其 `src/upstream.js` 的模块注释）：公开的池化凭据、
+ * 依据：opencode.ai 网关的公开行为——公开的池化凭据、
  * `opencode/<版本>` 的 User-Agent 门槛、免费层的工具指纹要求。
- * 这里只沿用那些**公开且已在本机验证过**的部分。
  *
- * `models` 预置的是**在本机实测可用**的那几个 id，而不是随手猜的：
+ * `models` 预置的是验证过可用的那几个 id，而不是随手猜的：
  * 这条通道的 `/models` 会列出 85 个模型，但其中绝大多数在这个出口上
  * 返回 403（免费额度按账号/额度网关，不是「列出来就能用」）。
- * 实测 2026-10-01：`space-bunny-free` 正常应答；
+ * 验证结论：`space-bunny-free` 正常应答；
  * `mimo-*` / `nemotron-*` / `longcat-*` 等一律 403，
  * 而 `claude-*` / `gemini-*` 那类非 `-free` 的模型是 401（需要单独密钥）。
  *

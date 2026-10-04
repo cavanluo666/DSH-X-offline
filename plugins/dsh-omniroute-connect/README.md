@@ -37,7 +37,7 @@
 1. 那是**别人家的免费额度**，随时可能失效、限流或关停。
 2. 它的 `/models` 会列出 85 个模型，但**绝大多数在这个出口上返回 403**
    （免费额度按账号/地区网关，不是「列出来就能用」）。
-   实测 2026-10-01：只有 `space-bunny-free` 正常应答；
+   验证结论：只有 `space-bunny-free` 正常应答；
    `mimo-*` / `nemotron-*` / `longcat-*` 一律 403，
    而 `claude-*` / `gemini-*` 这类非 `-free` 模型是 401（要单独密钥）。
    所以默认只预置**验证过的那一个**，而不是列一屏看着漂亮、
@@ -216,3 +216,10 @@ node run-tests.mjs     # 四套自检
 （多上游路由 + 回退 + 断路器），但**不依赖它**：没有外部进程、
 没有本地端口、不需要先装什么。OmniRoute 的 API 事实整理（含来源链接）
 在 `../omniroute-research/OMNIROUTE-API-REFERENCE.md`。
+
+## 许可证
+
+本项目以 **GNU General Public License v3.0 or later** 发布，完整条款见 [`LICENSE`](LICENSE)。
+
+```nCopyright (C) 2026 LCH```
+

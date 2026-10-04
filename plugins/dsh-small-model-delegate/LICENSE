@@ -676,12 +676,8 @@ Public License instead of this License.  But first, please read
 
                     How to Apply This License to Your Project
 
-DSH-X — DeepSeek Harness offline launcher (a derivative work of DSH-X by yyh)
-Copyright (C) 2026 LCH          (changes in this version)
-Copyright (C) 2026 yyh          (original project: https://github.com/yyh-001/DSH-X)
-
-The upstream project was released under the MIT License; its notice is preserved
-in full in the LICENSE-MIT file and in NOTICE.md.
+dsh-small-model-delegate
+Copyright (C) 2026 LCH
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

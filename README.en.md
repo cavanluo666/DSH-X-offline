@@ -125,7 +125,7 @@ Copyright (C) 2026 LCH          (changes in this version)
 Copyright (C) 2026 yyh          (original project)
 ```
 
-Released under the **GNU General Public License v3.0 or later**; see [`LICENSE.gpl`](LICENSE.gpl)
+Released under the **GNU General Public License v3.0 or later**; see [`LICENSE`](LICENSE)
 for the full terms. The upstream project was released under MIT, and its notice is preserved
 in full in [`NOTICE.md`](NOTICE.md) and [`LICENSE`](LICENSE).
 
