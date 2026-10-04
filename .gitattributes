@@ -1,0 +1,23 @@
+# 统一按 LF 存储，Windows 检出也用 LF，避免跨平台整文件 diff
+* text=auto eol=lf
+
+# 二进制资源
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.icns binary
+*.dll binary
+*.exe binary
+*.cab binary
+*.pem binary
+
+# .nsi 必须有 BOM 才能被 makensis 正确读中文注释：
+# 交给 git 不要做换行/编码转换，否则 BOM 会被抹掉
+*.nsi -text
+*.isl -text
+
+# 锁文件在 diff 里不展开
+package-lock.json -diff linguist-generated
+Cargo.lock -diff linguist-generated
+pnpm-lock.yaml -diff linguist-generated

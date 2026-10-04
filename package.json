@@ -1,0 +1,33 @@
+{
+  "name": "dsh-versions",
+  "productName": "DSH",
+  "version": "0.1.14",
+  "private": true,
+  "type": "module",
+  "description": "DeepSeek Harness 轻量启动器。选一个版本，启动 DSH web。",
+  "main": "start.js",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "start": "node start.js",
+    "server": "node server.js",
+    "test": "node --test",
+    "dist": "node scripts/pack.mjs",
+    "release:manifest": "node scripts/release-manifest.mjs make",
+    "release:sbom": "node scripts/release-sbom.mjs",
+    "release:verify": "node scripts/release-manifest.mjs verify",
+    "release:check": "node scripts/release-manifest.mjs check-tag"
+  },
+  "author": "yyh",
+  "contributors": [
+    "LCH"
+  ],
+  "license": "GPL-3.0-or-later",
+  "licenses": [
+    {
+      "type": "GPL-3.0-or-later",
+      "url": "https://www.gnu.org/licenses/gpl-3.0.txt"
+    }
+  ]
+}

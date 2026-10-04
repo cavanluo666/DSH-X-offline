@@ -1,0 +1,31 @@
+{
+  "manifestVersion": 5,
+  "type": "profile",
+  "name": "dsh-x-recommended",
+  "displayName": "DSH-X 推荐整合包",
+  "version": "1.4.0",
+  "description": "DSH-X 的一整套开箱环境。三件随安装包发（清单里写 bundled，不需要联网装）：dsh-our-free-model —— 免登录免费模型，装上就能直接对话；dsh-omniroute-connect —— 本地路由 / 网关接入；dsh-small-model-delegate —— 小模型委派，省 token。另加 dsh-config-manager（配置的备份 / 恢复 / 导出 / 导入，走本地目录或 ZIP）。整合包本身也从安装包内置的那份就地安装。",
+  "author": "yyh",
+  "license": "MIT",
+  "homepage": "https://github.com/cavanluo666/DSH-X-offline",
+  "category": "starter",
+  "dshVersion": ">=0.1.6",
+  "profileName": "dshx",
+  "keywords": [
+    "dsh-pack",
+    "starter"
+  ],
+  "dependencies": {
+    "dsh-config-manager": "^0.1.65",
+    "dsh-our-free-model": "bundled",
+    "dsh-omniroute-connect": "bundled",
+    "dsh-small-model-delegate": "bundled"
+  },
+  "bundles": [
+    "dsh-config-manager",
+    "dsh-our-free-model",
+    "dsh-omniroute-connect",
+    "dsh-small-model-delegate"
+  ],
+  "conflicts": []
+}
