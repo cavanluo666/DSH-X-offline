@@ -321,10 +321,13 @@ export async function copyWebView2Runtime(out, log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // expand 语法：`expand <cab> -F:* <dest>`，-F:Files 必须跟在 CAB 之后（见 unpackWebView2Runtime）
-      run('expand', [cab, '-F:*', stamp])
+      // 用 tar 解 CAB（Windows 自带 bsdtar，支持 cab 格式）。
+      //
+      // 为什么不用 expand：`expand <cab> -F:* <dest>` 实测只解出开头 2 个文件，
+      // 其余只打印 "Adding ... to Extraction Queue" 并不落盘 —— 557MB 的运行时
+      // 根本解不全，随后找不到 msedgewebview2.exe。tar 一条命令完整解出 168 个文件。
+      run('tar', ['-xf', cab, '-C', stamp])
     } else {
-      // .zip 也认：方便自己预先解好一份
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
     // 剥掉 Microsoft.WebView2.FixedVersionRuntime.<版本>.<arch> 那一层
@@ -390,11 +393,10 @@ export async function unpackWebView2Runtime(log = console.log) {
     await mkdir(stamp, { recursive: true })
     log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
     if (/.cab$/i.test(cab)) {
-      // expand 的语法是 `expand <cab> -F:* <dest>`：-F:Files 必须跟在 CAB 之后。
-      // 之前写成 `expand -F:* <cab> <dest>`，被 expand 当成「显示清单」模式，
-      // 只打印 "Adding ... to Extraction Queue" 并不真正解压，结果找不到
-      // msedgewebview2.exe。
-      run('expand', [cab, '-F:*', stamp])
+      // 用 tar 解 CAB（Windows 自带 bsdtar，支持 cab 格式）。
+      // 不用 expand：`expand <cab> -F:* <dest>` 只解开头 2 个文件，557MB 解不全
+      //（实测其余文件只入 Extraction Queue 不落盘），见 copyWebView2Runtime 的注释。
+      run('tar', ['-xf', cab, '-C', stamp])
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
