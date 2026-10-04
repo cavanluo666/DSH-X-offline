@@ -83,6 +83,13 @@ function extractCab(cab, dest) {
   const seven = findCaber()
   if (seven) {
     run(seven, ['x', cab, `-o${dest}`, '-y'])
+    // 诊断：解压后 dest 到底有什么（定位 7z -o 是否真的把文件写进 dest）
+    try {
+      const top = readdirSync(dest, { withFileTypes: true }).map((e) => e.name).slice(0, 8)
+      console.log(`  诊断 extractCab：${dest} 顶层 = ${top.join(', ') || '(空)'}`)
+    } catch (e) {
+      console.log(`  诊断 extractCab：读取 ${dest} 失败：${e.message}`)
+    }
     return
   }
   // 兜底：系统 bsdtar（Windows 10+ 自带，支持 cab）
