@@ -331,6 +331,30 @@ export function webview2InnerDir(dir) {
 }
 
 /**
+ * 在 dir 里递归找 msedgewebview2.exe，返回它所在的目录。
+ *
+ * 剥层的兜底：webview2InnerDir 依赖「CAB 里那层版本目录」这个固定结构，但不同
+ * 解包工具（expand / tar / 7z）对 CAB 的目录结构还原可能不一致。与其赌结构，
+ * 不如直接找 exe，把「它所在的目录」当作运行时根。
+ */
+function findWebView2Root(dir, depth = 0) {
+  if (depth > 4) return ''
+  try {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name === 'msedgewebview2.exe' && entry.isFile()) return dir
+    }
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue
+      const found = findWebView2Root(join(dir, entry.name), depth + 1)
+      if (found) return found
+    }
+  } catch {
+    // 换下一条路径
+  }
+  return ''
+}
+
+/**
  * 把 WebView2 固定版本运行时采进 <out>/webview2/，摊平成最终布局
  * （也就是让 `webview2\msedgewebview2.exe` 直接成立）。
  *
@@ -358,13 +382,15 @@ export async function copyWebView2Runtime(out, log = console.log) {
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
-    // 剥掉 Microsoft.WebView2.FixedVersionRuntime.<版本>.<arch> 那一层
-    const inner = webview2InnerDir(stamp)
-    if (inner) {
-      for (const entry of await readdir(inner)) {
-        await cp(join(inner, entry), join(stamp, entry), { recursive: true })
+    // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
+    // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
+    // 不同解包工具对 CAB 目录结构的还原并不一致。
+    const root = findWebView2Root(stamp)
+    if (root && root !== stamp) {
+      for (const entry of await readdir(root)) {
+        await cp(join(root, entry), join(stamp, entry), { recursive: true })
       }
-      await rm(inner, { recursive: true, force: true })
+      await rm(root, { recursive: true, force: true })
     }
     if (!existsSync(exe)) throw new Error('展开后的 WebView2 运行时里找不到 msedgewebview2.exe')
   } else {
@@ -426,13 +452,15 @@ export async function unpackWebView2Runtime(log = console.log) {
     } else {
       run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
     }
-    // 剥掉 Microsoft.WebView2.FixedVersionRuntime.<版本>.<arch> 那一层
-    const inner = webview2InnerDir(stamp)
-    if (inner) {
-      for (const entry of await readdir(inner)) {
-        await cp(join(inner, entry), join(stamp, entry), { recursive: true })
+    // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
+    // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
+    // 不同解包工具对 CAB 目录结构的还原并不一致。
+    const root = findWebView2Root(stamp)
+    if (root && root !== stamp) {
+      for (const entry of await readdir(root)) {
+        await cp(join(root, entry), join(stamp, entry), { recursive: true })
       }
-      await rm(inner, { recursive: true, force: true })
+      await rm(root, { recursive: true, force: true })
     }
     if (!existsSync(exe)) throw new Error('展开后的 WebView2 运行时里找不到 msedgewebview2.exe')
   } else {
