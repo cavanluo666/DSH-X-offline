@@ -385,7 +385,11 @@ export async function copyWebView2Runtime(out, log = console.log) {
     // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
     // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
     // 不同解包工具对 CAB 目录结构的还原并不一致。
+    try {
+      log(`  诊断：stamp 顶层 = ${readdirSync(stamp).slice(0, 10).join(', ') || '(空)'}`)
+    } catch { /* 诊断不影响主流程 */ }
     const root = findWebView2Root(stamp)
+    log(`  诊断：findWebView2Root = ${root ? root.replace(stamp, 'stamp') : '(空)'}`)
     if (root && root !== stamp) {
       for (const entry of await readdir(root)) {
         await cp(join(root, entry), join(stamp, entry), { recursive: true })
@@ -455,7 +459,11 @@ export async function unpackWebView2Runtime(log = console.log) {
     // 摊平：把 msedgewebview2.exe 所在的目录内容搬到 stamp 根（剥掉那层版本目录）。
     // 用 findWebView2Root 递归定位，而不是赌「CAB 里一定有某层固定名字的目录」——
     // 不同解包工具对 CAB 目录结构的还原并不一致。
+    try {
+      log(`  诊断：stamp 顶层 = ${readdirSync(stamp).slice(0, 10).join(', ') || '(空)'}`)
+    } catch { /* 诊断不影响主流程 */ }
     const root = findWebView2Root(stamp)
+    log(`  诊断：findWebView2Root = ${root ? root.replace(stamp, 'stamp') : '(空)'}`)
     if (root && root !== stamp) {
       for (const entry of await readdir(root)) {
         await cp(join(root, entry), join(stamp, entry), { recursive: true })
