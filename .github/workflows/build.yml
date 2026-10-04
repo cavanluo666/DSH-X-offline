@@ -42,6 +42,9 @@ jobs:
       - name: 确保有 NSIS（makensis 由 pack.mjs 调用）
         run: choco install nsis -y --no-progress
 
+      - name: 装 dsh 本体（离线载荷需要本机已装 @deepseek-ai/dsh）
+        run: npm i -g @deepseek-ai/dsh
+
       - name: 打包（Rust + NSIS）
         run: npm run dist
 
@@ -105,6 +108,10 @@ jobs:
       - name: 跑测试
         if: steps.probe.outputs.ready == 'yes'
         run: npm test
+
+      - name: 装 dsh 本体（离线载荷需要本机已装 @deepseek-ai/dsh）
+        if: steps.probe.outputs.ready == 'yes'
+        run: npm i -g @deepseek-ai/dsh
 
       - name: 打包（.app + .dmg，ad-hoc 签名）
         if: steps.probe.outputs.ready == 'yes'
