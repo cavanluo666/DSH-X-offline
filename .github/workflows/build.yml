@@ -20,7 +20,7 @@ permissions:
 jobs:
   windows:
     runs-on: windows-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -58,7 +58,9 @@ jobs:
             echo "::warning::在 $core 没找到 dsh 本体"
           fi
 
-      - name: 打包（Rust + NSIS）
+      - name: 打包（Rust + NSIS，含内置 WebView2 运行时）
+        env:
+          DSH_WEBVIEW2_DOWNLOAD: '1'
         run: npm run dist
 
       - name: 校验清单（没配签名私钥就按「未签名」核体积与哈希）
@@ -103,7 +105,7 @@ jobs:
           - runner: macos-15-intel # Intel（macos-13 这个标签 GitHub 已经退役，用了会一直排队）
             arch: x64
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 40
+    timeout-minutes: 90
     env:
       DSH_MAC_ARCH: ${{ matrix.arch }}
     steps:
