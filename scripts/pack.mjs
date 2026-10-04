@@ -12,11 +12,10 @@ import {
   copyDshCore,
   copyNpmModules,
   copyPnpm as copyPnpmModule,
-  copyWebView2Runtime,
   download,
   downloadNodeFile,
-  downloadWebView2Runtime,
   run,
+  unpackWebView2Runtime,
 } from './pack-common.mjs'
 import { collectArtifacts, writeReleaseManifest } from './release-manifest.mjs'
 import { collectComponents, writeSbom } from './release-sbom.mjs'
@@ -215,10 +214,12 @@ async function buildInstaller() {
 
   // 内置的 WebView2 固定版本运行时：DSH_WEBVIEW2 指到 CAB 或已解开的目录才带，
   // 不带也能装（DSH.exe 回落系统那份 Evergreen）。体积代价见 README 的「打包」一节。
-  let webview2 = process.env.DSH_WEBVIEW2 || ''
-  if (!webview2 && process.env.DSH_WEBVIEW2_DOWNLOAD === '1') {
-    webview2 = await downloadWebView2Runtime()
-  }
+  //
+  // ★ 必须先把 CAB 展开成摊平目录、再把目录交给 NSIS：直接把 CAB 路径给 WEBVIEW2_DIR，
+  //   NSIS 会走 expand.exe 分支，而那条路在 CI runner 上不可靠（expand 对 243MB 的 CAB
+  //   或特殊路径会静默失败），结果是 webview2 根本没进包、安装包仍是「瘦版」。
+  //   摊平成目录后走 File /r 分支，只把同一份 557MB 收进包一次。
+  const webview2 = await unpackWebView2Runtime()
   if (webview2) {
     console.log(`内置 WebView2 运行时 ← ${webview2}`)
   } else {

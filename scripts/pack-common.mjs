@@ -362,3 +362,48 @@ export async function downloadWebView2Runtime(log = console.log) {
   await download(url, dest)
   return dest
 }
+
+/**
+ * 把 WebView2 运行时**摊平**到一个目录（`msedgewebview2.exe` 直接在目录下），返回该目录路径。
+ *
+ * 与 copyWebView2Runtime 的区别：它把结果拷进 <out>/webview2（进 stage）；这里只做
+ * 「下载/展开 + 剥层 + 缓存」，返回目录，让调用方决定怎么收（buildInstaller 把目录
+ * 路径作为 WEBVIEW2_DIR 交给 NSIS 的 File /r 分支）。
+ *
+ * 为什么不直接沿用 copyWebView2Runtime 再传 stage 路径给 NSIS：stage 里的 webview2
+ * 会被第 1 步的 File /r 收一遍、又被 WEBVIEW2_DIR 的 File /r 再收一遍（实测 /x 在
+ * /r 递归时排不掉子目录），同一个 557 MB 进包两次。所以 stage 里必须没有它，只能
+ * 从单独目录收。
+ */
+export async function unpackWebView2Runtime(log = console.log) {
+  let cab = process.env.DSH_WEBVIEW2 || ''
+  if (!cab && process.env.DSH_WEBVIEW2_DOWNLOAD === '1') {
+    cab = await downloadWebView2Runtime(log)
+  }
+  if (!cab) return ''
+
+  const stamp = join(VENDOR, `webview2-${WEBVIEW2_VERSION}-${WEBVIEW2_ARCH}`)
+  const exe = join(stamp, 'msedgewebview2.exe')
+  if (!existsSync(exe)) {
+    await rm(stamp, { recursive: true, force: true })
+    await mkdir(stamp, { recursive: true })
+    log(`展开 WebView2 运行时 ${WEBVIEW2_VERSION}（约 557 MB，需要一会儿）…`)
+    if (/.cab$/i.test(cab)) {
+      run('expand', ['-F:*', cab, stamp])
+    } else {
+      run('powershell', ['-NoProfile', '-Command', `Expand-Archive -Force '${cab}' '${stamp}'`])
+    }
+    // 剥掉 Microsoft.WebView2.FixedVersionRuntime.<版本>.<arch> 那一层
+    const inner = webview2InnerDir(stamp)
+    if (inner) {
+      for (const entry of await readdir(inner)) {
+        await cp(join(inner, entry), join(stamp, entry), { recursive: true })
+      }
+      await rm(inner, { recursive: true, force: true })
+    }
+    if (!existsSync(exe)) throw new Error('展开后的 WebView2 运行时里找不到 msedgewebview2.exe')
+  } else {
+    log(`复用已展开的 WebView2 运行时 ← ${stamp}`)
+  }
+  return stamp
+}
