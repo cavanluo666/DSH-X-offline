@@ -236,7 +236,9 @@ async function buildInstaller() {
   ]
   if (webview2) args.push(`/DWEBVIEW2_DIR=${webview2}`)
   console.log('编译安装包（NSIS）')
-  run(makensis, args)
+  // -V4 让 makensis 把 !echo / !warning 等预处理期输出打到日志：
+  // 打包脚本是否真的把 WebView2 纳入，靠这些诊断行判断（默认级别不显示）。
+  run(makensis, ['-V4', ...args])
 
   const setup = join(ROOT, 'release', `${SETUP_NAME}.exe`)
   if (!existsSync(setup)) throw new Error(`没有生成 ${setup}`)
