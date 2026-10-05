@@ -229,16 +229,19 @@ async function buildInstaller() {
   await mkdir(join(ROOT, 'release'), { recursive: true })
   await ensureUtf8Bom(script, 'makensis 不认无 BOM 的 UTF-8')
   await ensureUtf8Bom(join(ROOT, 'scripts', 'stop-installed.ps1'), 'Windows PowerShell 5.1 按 ANSI 读无 BOM 的 UTF-8')
-  const args = [
-    script,
+  // ★ 参数顺序有硬性要求：makensis 的 /D 定义必须排在**脚本文件名之前**，
+  //   否则全部 /D 不生效、脚本退回 !ifndef 里的默认值 —— 表现为安装包版本号是
+  //   0.0.0、WEBVIEW2_DIR 为空因而「这一份不带 WebView2 运行时」（瘦版 127MB）。
+  //   这个坑很隐蔽：STAGE_DIR 的默认值 ..\release\DSH 恰好等于正确路径，
+  //   所以除了 WebView2 缺失之外看不出别的异常，查了很久才定位到顺序上。
+  const defines = [
+    '-V4', // 让预处理期的 !echo 进入日志，便于诊断 /D 是否生效
     `/DAPP_VERSION=${PKG.version}`,
     `/DSTAGE_DIR=${join(ROOT, 'release', 'DSH')}`,
   ]
-  if (webview2) args.push(`/DWEBVIEW2_DIR=${webview2}`)
+  if (webview2) defines.push(`/DWEBVIEW2_DIR=${webview2}`)
   console.log('编译安装包（NSIS）')
-  // -V4 让 makensis 把 !echo / !warning 等预处理期输出打到日志：
-  // 打包脚本是否真的把 WebView2 纳入，靠这些诊断行判断（默认级别不显示）。
-  run(makensis, ['-V4', ...args])
+  run(makensis, [...defines, script])
 
   const setup = join(ROOT, 'release', `${SETUP_NAME}.exe`)
   if (!existsSync(setup)) throw new Error(`没有生成 ${setup}`)
